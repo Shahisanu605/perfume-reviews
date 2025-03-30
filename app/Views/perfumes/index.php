@@ -8,29 +8,68 @@
         </a>
     </div>
 
+    <!-- Search Bar -->
+    <div class="mb-4">
+        <input type="text" id="searchInput" class="form-control" placeholder="Search perfumes...">
+    </div>
+
     <?php if (session()->getFlashdata('success')): ?>
         <div class="alert alert-success">
             <?= session()->getFlashdata('success') ?>
         </div>
     <?php endif; ?>
 
-    <?php if (!empty($perfumes)): ?>
-        <div class="list-group">
-            <?php foreach ($perfumes as $perfume): ?>
-                <a href="<?= base_url('perfumes/' . esc($perfume['id'])) ?>" class="list-group-item list-group-item-action">
-                    <div class="d-flex justify-content-between">
-                        <div>
-                            <strong><?= esc($perfume['name']) ?></strong><br>
-                            <small class="text-muted">Brand: <?= esc($perfume['brand']) ?></small>
+    <!-- Results Container -->
+    <div id="perfumeResults">
+        <?php if (!empty($perfumes)): ?>
+            <div class="list-group">
+                <?php foreach ($perfumes as $perfume): ?>
+                    <a href="<?= base_url('perfumes/' . esc($perfume['id'])) ?>" class="list-group-item list-group-item-action">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div>
+                                <strong><?= esc($perfume['name']) ?></strong><br>
+                                <small class="text-muted">Brand: <?= esc($perfume['brand']) ?></small><br>
+                                <small>
+                                    Rating:
+                                    <?php
+                                        $rating = intval($perfume['rating'] ?? 0);
+                                        for ($i = 1; $i <= 5; $i++) {
+                                            echo ($i <= $rating) ? '★' : '☆';
+                                        }
+                                    ?>
+                                </small>
+                            </div>
+                            <i class="bi bi-chevron-right"></i>
                         </div>
-                        <i class="bi bi-chevron-right"></i>
-                    </div>
-                </a>
-            <?php endforeach; ?>
-        </div>
-    <?php else: ?>
-        <p class="text-muted">No perfumes found.</p>
-    <?php endif; ?>
+                    </a>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <p class="text-muted">No perfumes found.</p>
+        <?php endif; ?>
+    </div>
 </div>
+
+<!-- Star Styling (Optional) -->
+<style>
+    small {
+        font-size: 16px;
+        color: #ffb700;
+        letter-spacing: 1px;
+    }
+</style>
+
+<!-- AJAX for Live Search -->
+<script>
+    document.getElementById('searchInput').addEventListener('input', function () {
+        const query = this.value;
+
+        fetch("<?= base_url('perfumes/search') ?>?q=" + encodeURIComponent(query))
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('perfumeResults').innerHTML = html;
+            });
+    });
+</script>
 
 <?= $this->include('templates/footer'); ?>

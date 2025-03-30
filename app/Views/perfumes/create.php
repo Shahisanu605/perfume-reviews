@@ -46,6 +46,12 @@
             <img id="preview" src="" alt="Image Preview" class="img-thumbnail mt-2" style="max-height: 200px; display: none;">
         </div>
 
+        <!-- New Rating Input -->
+        <div class="mb-3">
+            <label for="rating" class="form-label">Rating (1 to 5):</label>
+            <input type="number" name="rating" id="rating" class="form-control" min="1" max="5" value="<?= old('rating') ?>">
+        </div>
+
         <button type="submit" class="btn btn-success">Submit</button>
         <a href="<?= site_url('perfumes') ?>" class="btn btn-secondary ms-2">← Back to All Perfumes</a>
     </form>
@@ -67,7 +73,7 @@
     }
 
     imageUrlInput.addEventListener('input', updatePreview);
-    window.addEventListener('load', updatePreview); // Show preview if editing
+    window.addEventListener('load', updatePreview);
 </script>
 
 </body>

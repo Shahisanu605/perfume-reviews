@@ -8,8 +8,10 @@ class PerfumeModel extends Model
 {
     protected $table = 'perfumes';
     protected $primaryKey = 'id';
-    protected $allowedFields = ['name', 'brand', 'description', 'image'];
-    
+
+    // Include rating field for mass assignment
+    protected $allowedFields = ['name', 'brand', 'description', 'image', 'rating'];
+
     // Enable automatic timestamps
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';

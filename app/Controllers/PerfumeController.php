@@ -35,6 +35,18 @@ class PerfumeController extends Controller
         return view('perfumes/index', $data);
     }
 
+    // AJAX Search
+    public function search()
+    {
+        $query = $this->request->getGet('q');
+        $results = $this->model
+            ->like('name', $query)
+            ->orLike('brand', $query)
+            ->findAll();
+
+        return view('perfumes/_perfumeList', ['perfumes' => $results]);
+    }
+
     // Show single perfume
     public function show($id = null)
     {
@@ -65,7 +77,8 @@ class PerfumeController extends Controller
             'name'        => 'required|min_length[2]',
             'brand'       => 'required',
             'description' => 'required',
-            'image'       => 'permit_empty|valid_url'
+            'image'       => 'permit_empty|valid_url',
+            'rating'      => 'permit_empty|integer|greater_than_equal_to[1]|less_than_equal_to[5]'
         ]);
 
         if (!$this->validation->withRequest($this->request)->run()) {
@@ -79,6 +92,7 @@ class PerfumeController extends Controller
             'brand'       => $this->request->getPost('brand'),
             'description' => $this->request->getPost('description'),
             'image'       => $this->request->getPost('image'),
+            'rating'      => $this->request->getPost('rating'),
         ]);
 
         $this->session->setFlashdata('success', 'Perfume added successfully!');
@@ -106,7 +120,8 @@ class PerfumeController extends Controller
             'name'        => 'required|min_length[2]',
             'brand'       => 'required',
             'description' => 'required',
-            'image'       => 'permit_empty|valid_url'
+            'image'       => 'permit_empty|valid_url',
+            'rating'      => 'permit_empty|integer|greater_than_equal_to[1]|less_than_equal_to[5]'
         ]);
 
         if (!$this->validation->withRequest($this->request)->run()) {
@@ -121,6 +136,7 @@ class PerfumeController extends Controller
             'brand'       => $this->request->getPost('brand'),
             'description' => $this->request->getPost('description'),
             'image'       => $this->request->getPost('image'),
+            'rating'      => $this->request->getPost('rating'),
         ]);
 
         $this->session->setFlashdata('success', 'Perfume updated successfully!');
@@ -141,15 +157,12 @@ class PerfumeController extends Controller
         return view('perfumes/about');
     }
 
-    // Contact page (save form submission to DB)
+    // Contact form
     public function contact()
     {
         helper(['form', 'url']);
-        
-  
+
         if ($this->request->getMethod() === 'POST') {
-            // echo "✅ Routes working!<pre>" . print_r($this->request->getPost(), true) . "</pre>";
-            
             $rules = [
                 'name'    => 'required|min_length[3]',
                 'email'   => 'required|valid_email',
@@ -161,25 +174,16 @@ class PerfumeController extends Controller
                 ]);
             }
 
-            // Save message to DB
-            // $contactModel = new ContactModel();
-            // $contactModel->save([
-            //     'name'    => $this->request->getPost('name'),
-            //     'email'   => $this->request->getPost('email'),
-            //     'message' => $this->request->getPost('message')
-            // ]);
-          
             return view('perfumes/contact', [
                 'success'   => 'Thank you! Your message has been saved successfully.',
                 'submitted' => $this->request->getPost('name')
             ]);
-            // return redirect()->to(site_url('contact'))->with('success', 'Thank you! Your message has been saved successfully.');
         }
 
         return view('perfumes/contact');
     }
 
-    // Admin view: see all contact messages
+    // Admin view of contact messages
     public function viewMessages()
     {
         $contactModel = new ContactModel();
@@ -188,7 +192,7 @@ class PerfumeController extends Controller
         return view('perfumes/messages', ['messages' => $messages]);
     }
 
-    // Delete individual contact message
+    // Delete contact message
     public function deleteMessage($id)
     {
         $contactModel = new ContactModel();
@@ -197,7 +201,7 @@ class PerfumeController extends Controller
         return redirect()->to(site_url('contact/messages'))->with('success', 'Message deleted successfully!');
     }
 
-    // API page
+    // API test page
     public function apiPage()
     {
         return view('perfumes/api_page');
