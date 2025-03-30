@@ -1,0 +1,22 @@
+
+
+#--------------------------------------------------------------------
+# APP
+#--------------------------------------------------------------------
+app.baseURL = 'https://mi-linux.wlv.ac.uk/~2312161/perfume-reviews/public/'
+
+#--------------------------------------------------------------------
+# DATABASE
+#--------------------------------------------------------------------
+database.default.hostname = mi-linux.wlv.ac.uk
+database.default.database = db2312161
+database.default.username = 2312161
+database.default.password = University123?
+database.default.DBDriver = MySQLi
+database.default.DBPrefix =
+database.default.port = 3306
+
+#--------------------------------------------------------------------
+# LOGGER
+#--------------------------------------------------------------------
+logger.threshold = 4
