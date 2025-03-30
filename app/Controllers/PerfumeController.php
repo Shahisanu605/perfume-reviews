@@ -17,6 +17,7 @@ class PerfumeController extends Controller
         $this->session = session();
         $this->validation = \Config\Services::validation();
         $this->model = new PerfumeModel();
+
     }
 
     // Homepage
@@ -39,14 +40,15 @@ class PerfumeController extends Controller
     public function search()
     {
         $query = $this->request->getGet('q');
-        $results = $this->model
+        $perfumeModel = new \App\Models\PerfumeModel();
+
+        $results = $perfumeModel
             ->like('name', $query)
             ->orLike('brand', $query)
             ->findAll();
 
-        return view('perfumes/_perfumeList', ['perfumes' => $results]);
+        return $this->response->setJSON($results);
     }
-
     // Show single perfume
     public function show($id = null)
     {
@@ -161,7 +163,7 @@ class PerfumeController extends Controller
     public function contact()
     {
         helper(['form', 'url']);
-
+        $contactModel = new \App\Models\ContactModel();
         if ($this->request->getMethod() === 'POST') {
             $rules = [
                 'name'    => 'required|min_length[3]',
@@ -173,11 +175,24 @@ class PerfumeController extends Controller
                     'validation' => $this->validator
                 ]);
             }
+            #getting value from the form
+            $name = $this->request->getPost('name');
+            $email = $this->request->getPost('email');
+            $message = $this->request->getPost('message');
 
-            return view('perfumes/contact', [
-                'success'   => 'Thank you! Your message has been saved successfully.',
-                'submitted' => $this->request->getPost('name')
+            #loading the model and saving
+            $contactModel->save([
+                'name'    => $name,
+                'email'   => $email,
+                'message' => $message
             ]);
+
+            // sending msg of completion 
+            return view('perfumes/contact', [
+                'success'   => "Thank you, $name! Your message has been saved successfully.",
+                'submitted' => $name
+            ]);
+            
         }
 
         return view('perfumes/contact');

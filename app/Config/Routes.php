@@ -18,12 +18,12 @@ $routes->get('perfumes/(:num)', 'PerfumeController::show/$1');               // 
 $routes->get('perfumes/edit/(:num)', 'PerfumeController::edit/$1');          // Edit form
 $routes->post('perfumes/update/(:num)', 'PerfumeController::update/$1');     // Update perfume
 $routes->get('perfumes/delete/(:num)', 'PerfumeController::delete/$1');      // Delete perfume
+$routes->get('perfumes/search', 'PerfumeController::search');
 
 // Contact Form Routes
 $routes->match(['get', 'post'], 'contact', 'PerfumeController::contact'); // 🛠️ Route to contact page
 $routes->get('contact/messages', 'PerfumeController::viewMessages');      // View submitted messages
 $routes->get('contact/messages/delete/(:num)', 'PerfumeController::deleteMessage/$1'); // Delete a message
-
 // Static Pages
 $routes->get('about', 'PerfumeController::about');
 
