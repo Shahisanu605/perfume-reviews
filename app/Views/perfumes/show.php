@@ -20,7 +20,7 @@
         <blockquote class="mb-0">
             "<?= esc($quote) ?>"<br>
             — <strong><?= esc($author) ?></strong><br>
-            <small class="text-muted">(Default quote shown due to an API issue)</small>
+            <small class="text-muted">(ramro kuro leknu)</small>
         </blockquote>
     </div>
 

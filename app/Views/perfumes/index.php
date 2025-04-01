@@ -1,4 +1,29 @@
 <?= $this->include('templates/header'); ?>
+<style>
+    .card {
+        transition: background-color 0.3s ease, transform 0.3s ease;
+        overflow: hidden;
+    }
+
+    .card:hover {
+        background-color: #ffe6f0; /* pastel pink */
+    }
+
+    .card-img-top {
+        transition: transform 0.3s ease;
+    }
+
+    .card:hover .card-img-top {
+        transform: scale(1.05); /* zoom effect */
+    }
+
+    .card-text small,
+    .card-text {
+        font-size: 16px;
+        color: #ffb700;
+        letter-spacing: 1px;
+    }
+</style>
 
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -21,15 +46,17 @@
 
     <!-- Results Container -->
     <div id="perfumeResults">
-        <?php if (!empty($perfumes)): ?>
-            <div class="list-group">
+        <div class="row">
+            <?php if (!empty($perfumes)): ?>
                 <?php foreach ($perfumes as $perfume): ?>
-                    <a href="<?= base_url('perfumes/' . esc($perfume['id'])) ?>" class="list-group-item list-group-item-action">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div>
-                                <strong><?= esc($perfume['name']) ?></strong><br>
-                                <small class="text-muted">Brand: <?= esc($perfume['brand']) ?></small><br>
-                                <small>
+                    <div class="col-md-4 mb-4">
+                        <div class="card h-100 shadow-sm">
+                        <img src="<?= esc($perfume['image']) ?>" class="card-img-top" alt="<?= esc($perfume['name']) ?>" style="height: 250px; object-fit: cover;">
+
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title"><?= esc($perfume['name']) ?></h5>
+                                <p class="card-text text-muted">Brand: <?= esc($perfume['brand']) ?></p>
+                                <p class="card-text">
                                     Rating:
                                     <?php
                                         $rating = intval($perfume['rating'] ?? 0);
@@ -37,22 +64,25 @@
                                             echo ($i <= $rating) ? '★' : '☆';
                                         }
                                     ?>
-                                </small>
+                                </p>
+                                <a href="<?= base_url('perfumes/' . esc($perfume['id'])) ?>" class="btn btn-outline-primary mt-auto">
+                                    View Details
+                                </a>
                             </div>
-                            <i class="bi bi-chevron-right"></i>
                         </div>
-                    </a>
+                    </div>
                 <?php endforeach; ?>
-            </div>
-        <?php else: ?>
-            <p class="text-muted">No perfumes found.</p>
-        <?php endif; ?>
+            <?php else: ?>
+                <p class="text-muted">No perfumes found.</p>
+            <?php endif; ?>
+        </div>
     </div>
 </div>
 
-<!-- Star Styling (Optional) -->
+<!-- Star Styling -->
 <style>
-    small {
+    .card-text small,
+    .card-text {
         font-size: 16px;
         color: #ffb700;
         letter-spacing: 1px;
@@ -61,7 +91,6 @@
 
 <!-- AJAX for Live Search -->
 <script>
-
     const basePerfumeUrl = "<?= base_url('perfumes/') ?>";
 
     document.getElementById('searchInput').addEventListener('input', function () {
@@ -70,27 +99,29 @@
         fetch(basePerfumeUrl + "search?q=" + encodeURIComponent(query))
             .then(response => response.json())
             .then(data => {
-                let html = '';
+                let html = '<div class="row">';
 
                 if (data.length > 0) {
-                    html += `<div class="list-group">`;
                     data.forEach(perfume => {
                         const stars = '★'.repeat(perfume.rating ?? 0) + '☆'.repeat(5 - (perfume.rating ?? 0));
+                        const imageUrl = `${perfume.image}`;
 
                         html += `
-                            <a href="${basePerfumeUrl}${perfume.id}" class="list-group-item list-group-item-action">
-                                <div class="d-flex justify-content-between align-items-center">
-                                    <div>
-                                        <strong>${perfume.name}</strong><br>
-                                        <small class="text-muted">Brand: ${perfume.brand}</small><br>
-                                        <small>Rating: ${stars}</small>
+                            <div class="col-md-4 mb-4">
+                                <div class="card h-100 shadow-sm">
+                                    <img src="${imageUrl}" class="card-img-top" alt="${perfume.name}" style="height: 250px; object-fit: cover;">
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">${perfume.name}</h5>
+                                        <p class="card-text text-muted">Brand: ${perfume.brand}</p>
+                                        <p class="card-text">Rating: ${stars}</p>
+                                        <a href="${basePerfumeUrl}${perfume.id}" class="btn btn-outline-primary mt-auto">View Details</a>
                                     </div>
-                                    <i class="bi bi-chevron-right"></i>
                                 </div>
-                            </a>
+                            </div>
                         `;
                     });
-                    html += `</div>`;
+
+                    html += '</div>';
                 } else {
                     html = '<p class="text-muted">No matching perfumes found.</p>';
                 }
@@ -99,7 +130,5 @@
             });
     });
 </script>
-
-
 
 <?= $this->include('templates/footer'); ?>

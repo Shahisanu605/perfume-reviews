@@ -10,7 +10,8 @@ class ContactModel extends Model
 
     protected $allowedFields = ['name', 'email', 'message'];
 
-    // ✅ Enable timestamps so created_at is auto-filled
+    // Enable timestamps so created_at is auto-filled
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
+    protected $updatedField  = ''; //  disables updated_at
 }
