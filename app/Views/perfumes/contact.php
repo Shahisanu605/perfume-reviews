@@ -1,15 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Contact Us - Perfume Reviews</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(135deg, #FFDEE9 0%, #B5FFFC 100%);
-            font-family: 'Open Sans', sans-serif;
-            padding-top: 80px;
-        }
+<?= $this->include('templates/header'); ?>
+<style>
+        
         .contact-container {
             max-width: 650px;
             background: white;
@@ -36,9 +27,7 @@
             color: #FF4D6D;
         }
     </style>
-</head>
-<body>
-
+<br>
 <div class="container d-flex justify-content-center">
     <div class="contact-container">
         <h2 class="mb-4 text-center">📩 Contact Us</h2>
@@ -49,6 +38,14 @@
                 <h5><?= $success ?></h5>
             
             </div>
+            <script>
+        // Wait until DOM is loaded
+        window.addEventListener('DOMContentLoaded', () => {
+            document.querySelector('form').reset(); // clear the form
+        });
+    </script>
+
+    
         <?php endif; ?>
         <?php if (session()->getFlashdata('success')): ?>
             <div class="alert alert-success text-center">
@@ -85,6 +82,5 @@
         </form>
     </div>
 </div>
-
-</body>
-</html>
+<br>
+<?= $this->include('templates/footer'); ?>

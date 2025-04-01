@@ -12,6 +12,6 @@ class ContactModel extends Model
 
     // Enable timestamps so created_at is auto-filled
     protected $useTimestamps = true;
-    protected $createdField  = 'created_at';
+    protected $createdField  = 'created_at';    
     protected $updatedField  = ''; //  disables updated_at
 }
