@@ -26,7 +26,7 @@
                 </blockquote>
             </div>
         </div>
-
+        <?php if (session()->get('role') == 'admin'): ?>
         <div class="button-group mt-4 d-flex justify-content-between flex-wrap gap-2">
             <a href="<?= site_url('perfumes') ?>" class="btn btn-outline-primary">← Back to All Perfumes</a>
             <a href="<?= site_url('perfumes/edit/' . esc($perfume['id'])) ?>" class="btn btn-outline-dark">✏️ Edit</a>
@@ -34,6 +34,8 @@
                 <button type="submit" class="btn btn-outline-danger">🗑️ Delete</button>
             </form>
         </div>
+        <?php endif; ?>
+
     </div>
 </div>
 

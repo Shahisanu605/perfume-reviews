@@ -10,7 +10,7 @@ class UsersController extends BaseController
     public function register()
     {
         helper(['form']);
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->getMethod() === 'POST') {
             $rules = [
                 'username' => 'required|min_length[3]|max_length[20]',
                 'email'    => 'required|valid_email|is_unique[users.email]',
@@ -40,7 +40,7 @@ class UsersController extends BaseController
     public function login()
     {
         helper(['form']);
-        if ($this->request->getMethod() === 'post') {
+        if ($this->request->getMethod() === 'POST') {
             $email = $this->request->getPost('email');
             $password = $this->request->getPost('password');
 
@@ -52,9 +52,10 @@ class UsersController extends BaseController
                     'user_id' => $user['id'],
                     'username' => $user['username'],
                     'email' => $user['email'],
-                    'isLoggedIn' => true
+                    'role' => $user['role'],
+                    'isLoggedIn' => true,
                 ]);
-                return redirect()->to('/dashboard');
+                return redirect()->to('dashboard');
             } else {
                 return redirect()->back()->with('error', 'Invalid email or password');
             }

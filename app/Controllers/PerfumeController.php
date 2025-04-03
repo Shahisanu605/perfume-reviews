@@ -60,6 +60,8 @@ class PerfumeController extends Controller
 
     public function create()
     {
+        echo(session()->get('role'));
+        
         if (session()->get('role') !== 'admin') {
             return redirect()->to('/')->with('error', 'Access denied. Admins only.');
         }

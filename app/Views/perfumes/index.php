@@ -1,8 +1,10 @@
 <?= $this->include('templates/header'); ?>
+
 <style>
     .card {
         transition: background-color 0.3s ease, transform 0.3s ease;
         overflow: hidden;
+
     }
 
     .card:hover {
@@ -29,17 +31,19 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="display-6 fw-bold">All Perfumes</h1>
 
-        <?php if (session()->get('role') === 'admin'): ?>
-            <a href="<?= base_url('perfumes/create') ?>" class="btn btn-outline-primary">
+        <?php if (session()->get('isLoggedIn')): ?>
+            <a href="<?= site_url('perfumes/create') ?>" class="btn btn-outline-primary">
                 <i class="bi bi-plus-circle"></i> Add New Perfume
             </a>
         <?php endif; ?>
     </div>
 
     <!-- Search Bar -->
+     
     <div class="mb-4">
         <input type="text" id="searchInput" class="form-control" placeholder="Search perfumes...">
     </div>
+
 
     <?php if (session()->getFlashdata('success')): ?>
         <div class="alert alert-success">
@@ -69,7 +73,7 @@
                                 </p>
                                 <a href="<?= base_url('perfumes/' . esc($perfume['id'])) ?>" class="btn btn-outline-primary mt-auto mb-2">View Details</a>
 
-                                <?php if (session()->get('role') === 'admin'): ?>
+                                <?php if (session()->get('isLoggedIn') && session()->get('role') === 'admin'): ?>
                                     <a href="<?= base_url('perfumes/edit/' . esc($perfume['id'])) ?>" class="btn btn-outline-warning mb-2">Edit</a>
                                     <a href="<?= base_url('perfumes/delete/' . esc($perfume['id'])) ?>" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this perfume?');">Delete</a>
                                 <?php endif; ?>
@@ -110,7 +114,7 @@
                                         <p class="card-text text-muted">Brand: ${perfume.brand}</p>
                                         <p class="card-text">Rating: ${stars}</p>
                                         <a href="${basePerfumeUrl}${perfume.id}" class="btn btn-outline-primary mt-auto mb-2">View Details</a>
-                                        <?php if (session()->get('role') === 'admin'): ?>
+                                        <?php if (session()->get('isLoggedIn') && session()->get('role') === 'admin'): ?>
                                             <a href="${basePerfumeUrl}edit/${perfume.id}" class="btn btn-outline-warning mb-2">Edit</a>
                                             <a href="${basePerfumeUrl}delete/${perfume.id}" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this perfume?');">Delete</a>
                                         <?php endif; ?>
