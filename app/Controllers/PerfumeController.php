@@ -17,16 +17,13 @@ class PerfumeController extends Controller
         $this->session = session();
         $this->validation = \Config\Services::validation();
         $this->model = new PerfumeModel();
-
     }
 
-    // Homepage
     public function home()
     {
         return view('perfumes/landing');
     }
 
-    // List all perfumes
     public function index()
     {
         $data = [
@@ -36,20 +33,17 @@ class PerfumeController extends Controller
         return view('perfumes/index', $data);
     }
 
-    // AJAX Search
     public function search()
     {
         $query = $this->request->getGet('q');
-        $perfumeModel = new \App\Models\PerfumeModel();
-
-        $results = $perfumeModel
+        $results = $this->model
             ->like('name', $query)
             ->orLike('brand', $query)
             ->findAll();
 
         return $this->response->setJSON($results);
     }
-    // Show single perfume
+
     public function show($id = null)
     {
         $perfume = $this->model->find($id);
@@ -64,17 +58,23 @@ class PerfumeController extends Controller
         ]);
     }
 
-    // Create form
     public function create()
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/')->with('error', 'Access denied. Admins only.');
+        }
+
         return view('perfumes/create', [
             'validation' => $this->validation
         ]);
     }
 
-    // Store perfume
     public function store()
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/')->with('error', 'Access denied. Admins only.');
+        }
+
         $this->validation->setRules([
             'name'        => 'required|min_length[2]',
             'brand'       => 'required',
@@ -101,9 +101,12 @@ class PerfumeController extends Controller
         return redirect()->to(site_url('perfumes'));
     }
 
-    // Edit form
     public function edit($id = null)
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/')->with('error', 'Access denied. Admins only.');
+        }
+
         $perfume = $this->model->find($id);
         if (!$perfume) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Perfume not found.");
@@ -115,9 +118,12 @@ class PerfumeController extends Controller
         ]);
     }
 
-    // Update perfume
     public function update($id)
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/')->with('error', 'Access denied. Admins only.');
+        }
+
         $this->validation->setRules([
             'name'        => 'required|min_length[2]',
             'brand'       => 'required',
@@ -145,84 +151,84 @@ class PerfumeController extends Controller
         return redirect()->to(site_url('perfumes/' . $id));
     }
 
-    // Delete perfume
     public function delete($id)
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/')->with('error', 'Access denied. Admins only.');
+        }
+
         $this->model->delete($id);
         $this->session->setFlashdata('success', 'Perfume deleted successfully!');
         return redirect()->to(site_url('perfumes'));
     }
 
-    // About page
     public function about()
     {
         return view('perfumes/about');
     }
 
-    // Contact form
     public function contact()
     {
         helper(['form', 'url']);
-        $contactModel = new \App\Models\ContactModel();
+        $contactModel = new ContactModel();
+
         if ($this->request->getMethod() === 'POST') {
             $rules = [
                 'name'    => 'required|min_length[3]',
                 'email'   => 'required|valid_email',
                 'message' => 'required|min_length[10]'
             ];
+
             if (!$this->validate($rules)) {
                 return view('perfumes/contact', [
                     'validation' => $this->validator
                 ]);
             }
-            #getting value from the form
-            $name = $this->request->getPost('name');
-            $email = $this->request->getPost('email');
-            $message = $this->request->getPost('message');
 
-            #loading the model and saving
             $contactModel->save([
-                'name'    => $name,
-                'email'   => $email,
-                'message' => $message
+                'name'    => $this->request->getPost('name'),
+                'email'   => $this->request->getPost('email'),
+                'message' => $this->request->getPost('message')
             ]);
 
-            // sending msg of completion 
             return view('perfumes/contact', [
-                'success'   => "Thank you, $name! Your message has been saved successfully.",
-                'submitted' => $name
+                'success'   => "Thank you! Your message has been saved successfully.",
+                'clearForm' => true
             ]);
-            
         }
 
         return view('perfumes/contact');
     }
 
-    // Admin view of contact messages
     public function viewMessages()
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/')->with('error', 'Access denied. Admins only.');
+        }
+
         $contactModel = new ContactModel();
         $messages = $contactModel->orderBy('created_at', 'DESC')->findAll();
 
         return view('perfumes/messages', ['messages' => $messages]);
     }
 
-    // Delete contact message
     public function deleteMessage($id)
     {
+        if (session()->get('role') !== 'admin') {
+            return redirect()->to('/')->with('error', 'Access denied. Admins only.');
+        }
+
         $contactModel = new ContactModel();
         $contactModel->delete($id);
 
         return redirect()->to(site_url('contact/messages'))->with('success', 'Message deleted successfully!');
     }
 
-    // API test page
     public function apiPage()
     {
         return view('perfumes/api_page');
     }
 
-    // Return all perfumes as JSON
     public function getProducts()
     {
         $products = $this->model->findAll();

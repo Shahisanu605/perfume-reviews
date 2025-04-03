@@ -1,0 +1,33 @@
+CI_ENVIRONMENT = development
+
+#--------------------------------------------------------------------
+# APP
+#--------------------------------------------------------------------
+app.baseURL = 'https://mi-linux.wlv.ac.uk/~2312161/perfume-reviews/public/'
+app.forceGlobalSecureRequests = false
+app.sessionDriver = 'CodeIgniter\Session\Handlers\FileHandler'
+app.sessionCookieName = ci_session
+app.sessionExpiration = 7200
+app.sessionSavePath = WRITEPATH + 'session'
+app.sessionMatchIP = false
+app.sessionTimeToUpdate = 300
+app.sessionRegenerateDestroy = false
+
+#--------------------------------------------------------------------
+# DATABASE
+#--------------------------------------------------------------------
+database.default.hostname = mi-linux.wlv.ac.uk
+database.default.database = db2312161
+database.default.username = 2312161
+database.default.password = 'University123?'
+database.default.DBDriver = MySQLi
+database.default.DBPrefix =
+database.default.port = 3306
+database.default.DBSocket =
+
+#--------------------------------------------------------------------
+# LOGGER
+#--------------------------------------------------------------------
+logger.threshold = 4
+logger.filePermissions = 0644
+logger.dateFormat = 'Y-m-d H:i:s'

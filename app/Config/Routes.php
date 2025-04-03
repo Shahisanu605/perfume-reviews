@@ -6,24 +6,35 @@ use CodeIgniter\Router\RouteCollection;
  * @var RouteCollection $routes
  */
 
-// Default Home Route (Landing Page)
+// Default Home Route
 $routes->get('/', 'PerfumeController::home');
 $routes->get('perfumes/home', 'PerfumeController::home');
 
 // Perfume CRUD Routes
-$routes->get('perfumes', 'PerfumeController::index');                        // List perfumes
-$routes->get('perfumes/create', 'PerfumeController::create');                // Add perfume form
-$routes->post('perfumes/store', 'PerfumeController::store');                 // Store perfume
-$routes->get('perfumes/(:num)', 'PerfumeController::show/$1');               // Single perfume view
-$routes->get('perfumes/edit/(:num)', 'PerfumeController::edit/$1');          // Edit form
-$routes->post('perfumes/update/(:num)', 'PerfumeController::update/$1');     // Update perfume
-$routes->get('perfumes/delete/(:num)', 'PerfumeController::delete/$1');      // Delete perfume
+$routes->get('perfumes', 'PerfumeController::index');
+$routes->get('perfumes/create', 'PerfumeController::create');
+$routes->post('perfumes/store', 'PerfumeController::store');
+$routes->get('perfumes/(:num)', 'PerfumeController::show/$1');
+$routes->get('perfumes/edit/(:num)', 'PerfumeController::edit/$1');
+$routes->post('perfumes/update/(:num)', 'PerfumeController::update/$1');
+$routes->get('perfumes/delete/(:num)', 'PerfumeController::delete/$1');
 $routes->get('perfumes/search', 'PerfumeController::search');
 
+// Authentication Routes
+$routes->get('register', 'UsersController::register');
+$routes->post('register', 'UsersController::register');
+$routes->get('login', 'UsersController::login');
+$routes->post('login', 'UsersController::login');
+$routes->get('logout', 'UsersController::logout');
+
+// Dashboard after login (only use this one)
+$routes->get('dashboard', 'UsersController::dashboard');
+
 // Contact Form Routes
-$routes->match(['get', 'post'], 'contact', 'PerfumeController::contact'); // 🛠️ Route to contact page
-$routes->get('contact/messages', 'PerfumeController::viewMessages');      // View submitted messages
-$routes->get('contact/messages/delete/(:num)', 'PerfumeController::deleteMessage/$1'); // Delete a message
+$routes->match(['get', 'post'], 'contact', 'PerfumeController::contact');
+$routes->get('contact/messages', 'PerfumeController::viewMessages');
+$routes->get('contact/messages/delete/(:num)', 'PerfumeController::deleteMessage/$1');
+
 // Static Pages
 $routes->get('about', 'PerfumeController::about');
 
@@ -36,5 +47,5 @@ $routes->get('test', function () {
     echo "✅ Routes working!";
 });
 
-// Security: Disable legacy auto-routing
+// Disable legacy auto-routing (recommended)
 $routes->setAutoRoute(false);

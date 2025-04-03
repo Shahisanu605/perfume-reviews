@@ -6,7 +6,7 @@
     }
 
     .card:hover {
-        background-color: #ffe6f0; /* pastel pink */
+        background-color: #ffe6f0;
     }
 
     .card-img-top {
@@ -14,7 +14,7 @@
     }
 
     .card:hover .card-img-top {
-        transform: scale(1.05); /* zoom effect */
+        transform: scale(1.05);
     }
 
     .card-text small,
@@ -28,9 +28,12 @@
 <div class="container py-5">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="display-6 fw-bold">All Perfumes</h1>
-        <a href="<?= base_url('perfumes/create') ?>" class="btn btn-outline-primary">
-            <i class="bi bi-plus-circle"></i> Add New Perfume
-        </a>
+
+        <?php if (session()->get('role') === 'admin'): ?>
+            <a href="<?= base_url('perfumes/create') ?>" class="btn btn-outline-primary">
+                <i class="bi bi-plus-circle"></i> Add New Perfume
+            </a>
+        <?php endif; ?>
     </div>
 
     <!-- Search Bar -->
@@ -51,8 +54,7 @@
                 <?php foreach ($perfumes as $perfume): ?>
                     <div class="col-md-4 mb-4">
                         <div class="card h-100 shadow-sm">
-                        <img src="<?= esc($perfume['image']) ?>" class="card-img-top" alt="<?= esc($perfume['name']) ?>" style="height: 250px; object-fit: cover;">
-
+                            <img src="<?= esc($perfume['image']) ?>" class="card-img-top" alt="<?= esc($perfume['name']) ?>" style="height: 250px; object-fit: cover;">
                             <div class="card-body d-flex flex-column">
                                 <h5 class="card-title"><?= esc($perfume['name']) ?></h5>
                                 <p class="card-text text-muted">Brand: <?= esc($perfume['brand']) ?></p>
@@ -65,9 +67,12 @@
                                         }
                                     ?>
                                 </p>
-                                <a href="<?= base_url('perfumes/' . esc($perfume['id'])) ?>" class="btn btn-outline-primary mt-auto">
-                                    View Details
-                                </a>
+                                <a href="<?= base_url('perfumes/' . esc($perfume['id'])) ?>" class="btn btn-outline-primary mt-auto mb-2">View Details</a>
+
+                                <?php if (session()->get('role') === 'admin'): ?>
+                                    <a href="<?= base_url('perfumes/edit/' . esc($perfume['id'])) ?>" class="btn btn-outline-warning mb-2">Edit</a>
+                                    <a href="<?= base_url('perfumes/delete/' . esc($perfume['id'])) ?>" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this perfume?');">Delete</a>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -79,17 +84,7 @@
     </div>
 </div>
 
-<!-- Star Styling -->
-<style>
-    .card-text small,
-    .card-text {
-        font-size: 16px;
-        color: #ffb700;
-        letter-spacing: 1px;
-    }
-</style>
-
-<!-- AJAX for Live Search -->
+<!-- AJAX Search Script -->
 <script>
     const basePerfumeUrl = "<?= base_url('perfumes/') ?>";
 
@@ -114,7 +109,11 @@
                                         <h5 class="card-title">${perfume.name}</h5>
                                         <p class="card-text text-muted">Brand: ${perfume.brand}</p>
                                         <p class="card-text">Rating: ${stars}</p>
-                                        <a href="${basePerfumeUrl}${perfume.id}" class="btn btn-outline-primary mt-auto">View Details</a>
+                                        <a href="${basePerfumeUrl}${perfume.id}" class="btn btn-outline-primary mt-auto mb-2">View Details</a>
+                                        <?php if (session()->get('role') === 'admin'): ?>
+                                            <a href="${basePerfumeUrl}edit/${perfume.id}" class="btn btn-outline-warning mb-2">Edit</a>
+                                            <a href="${basePerfumeUrl}delete/${perfume.id}" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete this perfume?');">Delete</a>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>

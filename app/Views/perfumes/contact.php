@@ -1,32 +1,37 @@
 <?= $this->include('templates/header'); ?>
+
 <style>
-        
-        .contact-container {
-            max-width: 650px;
-            background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-        .btn-custom {
-            background-color: #FF4D6D;
-            color: white;
-            border-radius: 30px;
-            font-weight: bold;
-            transition: background-color 0.3s ease;
-        }
-        .btn-custom:hover {
-            background-color: #e03b59;
-        }
-        label {
-            font-weight: 600;
-            color: #333;
-        }
-        h2 {
-            font-weight: 700;
-            color: #FF4D6D;
-        }
-    </style>
+    .contact-container {
+        max-width: 650px;
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn-custom {
+        background-color: #FF4D6D;
+        color: white;
+        border-radius: 30px;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn-custom:hover {
+        background-color: #e03b59;
+    }
+
+    label {
+        font-weight: 600;
+        color: #333;
+    }
+
+    h2 {
+        font-weight: 700;
+        color: #FF4D6D;
+    }
+</style>
+
 <br>
 <div class="container d-flex justify-content-center">
     <div class="contact-container">
@@ -34,19 +39,19 @@
 
         <!-- Success Message -->
         <?php if (!empty($success) && !empty($submitted)): ?>
-            <div class="alert alert-success">
-                <h5><?= $success ?></h5>
-            
+            <div class="alert alert-success text-center">
+                <strong><?= esc($success) ?></strong>
             </div>
-            <script>
-        // Wait until DOM is loaded
-        window.addEventListener('DOMContentLoaded', () => {
-            document.querySelector('form').reset(); // clear the form
-        });
-    </script>
 
-    
+            <!-- Clear the form on success -->
+            <script>
+                window.addEventListener('DOMContentLoaded', () => {
+                    document.querySelector('form').reset();
+                });
+            </script>
         <?php endif; ?>
+
+        <!-- Flash Success -->
         <?php if (session()->getFlashdata('success')): ?>
             <div class="alert alert-success text-center">
                 <?= session()->getFlashdata('success') ?>
@@ -60,6 +65,7 @@
             </div>
         <?php endif; ?>
 
+        <!-- Contact Form -->
         <form action="<?= site_url('contact') ?>" method="post">
             <?= csrf_field() ?>
 
@@ -83,4 +89,5 @@
     </div>
 </div>
 <br>
+
 <?= $this->include('templates/footer'); ?>
